@@ -96,3 +96,37 @@ void AmberData::PlotClusterTimeDiff(Long64_t spill, const std::vector<double> &V
   h_cal->Draw();
   c_cal->SaveAs(Form("cal_spill_%lld.png", spill));
 }
+
+double AmberData::CalibrateAmberTrigger(Long64_t spill, const std::vector<double> &TriggerTimeStamps, double spill_pos) {
+    const PerSpill* p = nullptr;
+    for (auto& ps : mPerSpillData) {
+        if (ps.SpillNumber == spill) {
+            p = &ps;
+            break;
+        }
+    }
+
+    TH1D* h1_cal = new TH1D("", "; #Deltat / #mus; entrys per bin", 20e05, -10e06, 10e06);
+    for (long unsigned int j = 0; j < p->timeStamps.size(); j++) {
+        for (long unsigned int k = 0; k < TriggerTimeStamps.size(); k++) {
+            h1_cal->Fill((p->timeStamps[j] - TriggerTimeStamps[k] + spill_pos)/1000);   //time differences in us
+        }
+    }
+    double peakpos_0 = h1_cal->GetMaximumBin() * 20e06 / 20e05 - 10e06;;   //highest bin should be at calibration peak
+    TCanvas* c1_cal = new TCanvas("", "", 1200, 700);
+    h1_cal->Draw();
+    c1_cal->SaveAs(Form("trigger_cal_1_spill_%lld.png", spill));
+    TH1D* h2_cal = new TH1D("", "; #Deltat / #mus; entrys per bin", 40000, peakpos_0 - 20, peakpos_0 + 20);
+    for (long unsigned int j = 0; j < p->timeStamps.size(); j++) {
+        for (long unsigned int k = 0; k < TriggerTimeStamps.size(); k++) {
+            h2_cal->Fill((p->timeStamps[j] - TriggerTimeStamps[k] + spill_pos) / 1000);   //time differences in us
+        }
+    }
+    double peakpos_1 = h2_cal->GetMaximumBin() * 1 - 10000; // accuracy 1 ns
+    TCanvas* c2_cal = new TCanvas("", "", 1200, 700);
+    h2_cal->Draw();
+    c2_cal->SaveAs(Form("trigger_cal_2_spill_%lld.png", spill));
+    return peakpos_1;
+
+}
+
