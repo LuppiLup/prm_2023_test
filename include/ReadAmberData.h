@@ -20,6 +20,9 @@ public:
   /*Plot the difference of all time stamps of amber in a given time frame to vmm time stamps*/
   void PlotClusterTimeDiff(Long64_t spill, const std::vector<double> &VMMTimeStamps);
 
+
+  double CalibrateAmberTrigger(Long64_t spill, const std::vector<double>& TriggerTimeStamps, double spill_pos);
+
 private:
   std::vector<PerSpill> mPerSpillData;
   // clock correction

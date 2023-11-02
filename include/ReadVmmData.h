@@ -19,6 +19,8 @@ public:
   /*Make 4 plots to show the distribution of cluster times and amber triggers. Just in the spills*/
   void PlotClusterTrigger2D() const;
 
+  const std::vector<double>& GetTriggerTimes() const { return mTriggerTimes; }
+
   const std::vector<double> &GetClusterTimes() const { return mClusterTimes; }
 
 private:
