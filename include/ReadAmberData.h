@@ -7,6 +7,9 @@
 
 struct PerSpill {
   std::vector<double> timeStamps;
+  std::vector<double> tracks_x;
+  std::vector<double> tracks_y;
+  std::vector<double> tracks_z;
   Long64_t SpillNumber;
 };
 
