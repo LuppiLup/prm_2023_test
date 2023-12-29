@@ -5,6 +5,12 @@
 #include "TH1.h"
 #include "TStyle.h"
 #include "TTree.h"
+//#include "TrackExtrapolationResult.h"
+//#include "TrackData.h"
+
+#include "TTreeReader.h"
+#include "TTreeReaderValue.h"
+#include "TTreeReaderArray.h"
 
 #include <iostream>
 
@@ -18,17 +24,27 @@ AmberData::AmberData(const std::string &DataFile) {
 
   Long64_t s;
   double time;
+  double x;
+  double y;
+  double z;
+  std::vector<double> extrapolation;
+  std::vector<double> track_x;
+  std::vector<double> track_y;
+  std::vector<double> track_z;
 std::cout << " I am here A " << std::endl;
   TTree *t = (TTree *)f.Get("UserEvent7001");
   std::cout << " I am here B " << std::endl;
   t->SetBranchAddress("spill", &s);
   std::cout << " I am here C " << std::endl;
+  t->Print();
   t->SetBranchAddress("timeInSpill", &time);
+  //TrackExtrapolationResult tracks;
+  //t->SetBranchAddress("x", &tracks.x);
   size_t NEntries = t->GetEntries();
   Long64_t s_last = 10000;
   std::vector<double> times;
   std::cout << " I am here 1" << std::endl;
-  for (size_t i = 0; i < NEntries; ++i) {
+  for (size_t i = 0; i < 10; ++i) {
     t->GetEntry(i);
     if (s_last == 10000) {
       s_last = s;
@@ -36,15 +52,20 @@ std::cout << " I am here A " << std::endl;
       PerSpill p;
       p.SpillNumber = s_last;
       p.timeStamps.swap(times);
+      //p.tracks_x.swap(track_x);
       mPerSpillData.push_back(p);
       s_last = s;
     }
     times.push_back(time * (1 + alpha) * 1e09);
+    //extrapolation = t->GetLeaf("SpectrometerData.extrapolationResults")->GetValue();
+    //x = t->GetLeaf("SpectrometerData.extrapolationResults")->GetValue();
+    //track_x.push_back(tracks.x);
+    //std::cout << i << "  " << track_x.size() << "  " << track_x[i] <<std::endl;
   }
-  std::cout << " I am here 2 " << std::endl;
   PerSpill p;
   p.SpillNumber = s_last;
   p.timeStamps.swap(times);
+  p.tracks_x.swap(track_x);
   f.Close();
   // for (auto &s : mPerSpillData) {
   //   std::cout << "NAmbertimes for spill: " << s.SpillNumber << " " << s.timeStamps.size()
