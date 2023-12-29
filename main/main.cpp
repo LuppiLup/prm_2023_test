@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
   VMMData VMM(VMM_DAQ_RECO_FILE.Data());
 
   PutTime() << ": Amber time stamps..." << std::endl;
-  AMBER.PlotTimeStamps(12);
-  double x = AMBER.CalibrateAmberTrigger(16, VMM.GetTriggerTimes(), 3189e09);
+  //AMBER.PlotTimeStamps(12);
+  //double x = AMBER.CalibrateAmberTrigger(16, VMM.GetTriggerTimes(), 3189e09);
   //AMBER.PlotTimeStamps(13);
 // Takes a bit
 //   PutTime() << ": Amber cluster time diff..." << std::endl;
@@ -34,12 +34,15 @@ int main(int argc, char **argv) {
   VMM.PlotTriggerTimes();
   PutTime() << ": VMM cluster times..." << std::endl;
   VMM.PlotClusterTimes();
+  VMM.PlotCluster0Pos();
+  VMM.PlotCluster1Pos();
 // Takes quite long
    PutTime() << ": VMM cluster trigger time diff..." << std::endl;
    //VMM.PlotClusterTriggerDiff();
+   VMM.TimeResolution();
   PutTime() << ": VMM cluster trigger 2d..." << std::endl;
   //VMM.PlotClusterTrigger2D();
-  PutTime() << "  " << x << std::endl;
+  //PutTime() << "  " << x << std::endl;
   PutTime() << ": End of program!" << std::endl;
   app.Terminate(); // addem by Michael to properly clode TApplication in root 5 to prevent seg fault
   return 0;
