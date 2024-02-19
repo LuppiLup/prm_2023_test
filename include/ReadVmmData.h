@@ -19,6 +19,7 @@ public:
 
   /*Plot the difference of all amber triggers with all vmm cluster times*/
   void PlotClusterTriggerDiff() const;
+  void PlotClusterTriggerDiffVMMs() const;
 
   /*Get time resolution by comparing planes*/
   void TimeResolution() const;
@@ -28,7 +29,9 @@ public:
 
   const std::vector<double>& GetTriggerTimes() const { return mTriggerTimes; }
 
-  const std::vector<double> &GetClusterTimes() const { return mCluster0Times; }
+  const std::vector<double> &GetCluster0Times() const { return mCluster0Times; }
+
+  const std::vector<double>& GetCluster1Times() const { return mCluster1Times; }
 
   const std::vector<double> &GetCluster0Pos() const { return mCluster0Pos; }
 
